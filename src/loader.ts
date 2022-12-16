@@ -31,8 +31,8 @@ function loadJSON(url: string) {
 
 export function loadResources() {
     return Promise.all([
-        SpriteSheet.load("/assets/images/aqua.png").then(sheet => Assets.aqua = sheet),
-        loadJSON("/rulesets/classic.json").then(json => Rulesets.classic = json),
-        loadJSON("/rulesets/fever.json").then(json => Rulesets.fever = json),
+        SpriteSheet.load("assets/images/aqua.png").then(sheet => Assets.aqua = sheet),
+        loadJSON("rulesets/classic.json").then(json => Rulesets.classic = json),
+        loadJSON("rulesets/fever.json").then(json => Rulesets.fever = json),
     ]);
 }

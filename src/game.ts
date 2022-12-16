@@ -1,18 +1,16 @@
-import { Player } from "./model/puyo/player";
-import { Ruleset, Rulesets } from "./loader";
-import { RenderTarget } from "./canvas";
-import { generateDrop, PuyoGrid } from "./model/puyo/grid";
-import { BoardGraphic } from "./graphics/board";
-import { Point } from "./model/point";
-import { FreeFallForce, FreeFallOptions } from "./physics/free-fall";
-import { InputSource } from "./input/source";
-import { DropGraphic } from "./graphics/drop";
-import { Direction } from "./model/direction";
-import { PUYO_SIZE } from "./sprites/puyo";
-import { MessagePubsub } from "./message/pubsub";
-import { forComponent, forResource } from "./message/message";
-import { PuyoMessage } from "./message/puyo";
-import { forBoard } from "./message/board";
+import {Player} from "./model/puyo/player";
+import {Ruleset, Rulesets} from "./loader";
+import {RenderTarget} from "./canvas";
+import {generateDrop, PuyoGrid} from "./model/puyo/grid";
+import {BoardGraphic} from "./graphics/board";
+import {Point} from "./model/point";
+import {InputSource} from "./input/source";
+import {DropGraphic} from "./graphics/drop";
+import {Direction} from "./model/direction";
+import {PUYO_SIZE} from "./sprites/puyo";
+import {MessagePubsub} from "./message/pubsub";
+import {forComponent, forResource} from "./message/message";
+import {forBoard} from "./message/board";
 
 export class PuyoGame {
     readonly players: Player[] = [];
