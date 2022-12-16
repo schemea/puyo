@@ -1,8 +1,8 @@
-import { Puyo, PuyoState } from "./puyo";
-import { Direction, DIRECTIONS, getDirectionCoordinates, getReverseDirection } from "../direction";
-import { Point, PointLike } from "../point";
-import { Color } from "../color";
-import { PropertyReference } from "../../reference";
+import {Puyo, PuyoState} from "./puyo";
+import {Direction, DIRECTIONS, getDirectionCoordinates, getReverseDirection} from "../direction";
+import {Point, PointLike} from "../point";
+import {Color} from "../color";
+import {PropertyReference} from "../../reference";
 
 export const PUYO_GRID_WIDTH = 6;
 export const PUYO_GRID_HEIGHT = 13;
@@ -11,7 +11,7 @@ export class PuyoGrid {
     items: Puyo[] = [];
 
     constructor(readonly width = PUYO_GRID_WIDTH, readonly height = PUYO_GRID_HEIGHT) {
-        this.items = new Array(width * height).fill({ color: "blank", state: "blank", links: 0 });
+        this.items = new Array(width * height).fill({color: "blank", state: "blank", links: 0});
     }
 
     reference(x: number, y: number): { value: Puyo } {
@@ -61,6 +61,8 @@ export class PuyoGrid {
     }
 
     collisions(x: number, y: number) {
+        if (this.get(x, y).state === PuyoState.INVALID) return 0;
+
         let collisions = 0;
         for (const direction of DIRECTIONS) {
             const { x: dx, y: dy } = getDirectionCoordinates(direction);

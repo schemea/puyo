@@ -8,10 +8,15 @@ export type SizeLike = PointLike;
 
 export class Point {
 
-    constructor(public readonly x = 0, public readonly y = 0) {}
+    constructor(public readonly x = 0, public readonly y = 0) {
+    }
 
     negate() {
         return new Point(-this.x, -this.y);
+    }
+
+    static equals(a: PointLike, b: PointLike) {
+        return a.x === b.x && a.y === b.y
     }
 
     static negate(value: PointLike) {
@@ -19,7 +24,7 @@ export class Point {
     }
 
     static add(...points: PointLike[]): Point {
-        const { x, y } = points.reduce((a, b) => ({ x: a.x + b.x, y: a.y + b.y }));
+        const {x, y} = points.reduce((a, b) => ({x: a.x + b.x, y: a.y + b.y}));
         return new Point(x, y);
     }
 

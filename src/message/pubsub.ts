@@ -1,5 +1,5 @@
 import { Message, MessageInterface } from "./message";
-import { Observable, Subject } from "rxjs";
+import {Observable, Subject, tap} from "rxjs";
 
 interface UnaryFunction<T, R> {
     (source: T): R;
@@ -9,9 +9,7 @@ interface OperatorFunction<T, R> extends UnaryFunction<Observable<T>, Observable
 
 export class MessagePubsub<T extends MessageInterface = Message> {
 
-    private readonly subject = new Subject<MessageInterface>();
-
-    private constructor(readonly observable: Observable<T>) {
+    private constructor(readonly subject: Subject<MessageInterface>, readonly observable: Observable<T>) {
     }
 
     static create() {
@@ -30,7 +28,7 @@ export class MessagePubsub<T extends MessageInterface = Message> {
     pipe(...args: any[]) {
         // @ts-ignore
         const observable: Observable<any> = this.observable.pipe(...args);
-        return new MessagePubsub(observable);
+        return new MessagePubsub(this.subject, observable);
     }
 
     subscribe(callback: (message: T) => void) {

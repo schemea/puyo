@@ -11,6 +11,7 @@ import { Matrix } from "../math/matrix";
 import { PuyoGrid } from "../model/puyo/grid";
 import { FreeFallForce } from "../physics/free-fall";
 import { PuyoState } from "../model/puyo/puyo";
+import {MessagePubsub} from "../message/pubsub";
 
 export class DropGraphic extends Graphic {
 
@@ -36,7 +37,7 @@ export class DropGraphic extends Graphic {
         return this.board.grid;
     }
 
-    constructor(readonly board: BoardGraphic, readonly regularSpeed = 16, readonly softDropSpeed = 2) {
+    constructor(readonly messages: MessagePubsub, readonly player: number, readonly board: BoardGraphic, readonly regularSpeed = 16, readonly softDropSpeed = 2) {
         super();
         this.anchor = new Point(PUYO_SIZE, PUYO_SIZE);
     }
@@ -99,17 +100,29 @@ export class DropGraphic extends Graphic {
 
             this.drop.forEach((puyo, dx, dy) => {
                 if (puyo.state === PuyoState.STATIC) {
-                    this.grid.set(x + dx, y + dy, puyo.color);
-
-                    const graphic = new PuyoGraphic(this.grid, x + dx, y + dy);
-                    this.board.elements.push(graphic);
-                    if (!(this.grid.collisions(graphic.x, graphic.y) & Direction.DOWN)) {
-                        graphic.forces.push(new FreeFallForce({
-                            speed: 1,
-                            acceleration: 0.2,
-                            maxSpeed: 20,
-                        }));
-                    }
+                    this.messages.publish({
+                        component: "board",
+                        resource: "puyo",
+                        action: "set",
+                        color: puyo.color,
+                        player: this.player,
+                        position: {
+                            x: x + dx,
+                            y: y + dy
+                        },
+                    })
+                    // this.grid.set(x + dx, y + dy, puyo.color);
+                    //
+                    // const graphic = new PuyoGraphic(this.grid, x + dx, y + dy);
+                    // this.board.elements.push(graphic);
+                    // if (!(this.grid.collisions(graphic.x, graphic.y) & Direction.DOWN)) {
+                    //     graphic.forces.push(new FreeFallForce(this.messages, {
+                    //         player: this.player,
+                    //         speed: 1,
+                    //         acceleration: 0.2,
+                    //         maxSpeed: 20,
+                    //     }));
+                    // }
                 }
             });
 

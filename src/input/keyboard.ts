@@ -1,6 +1,7 @@
 import { Events, InputSource } from "./source";
 import { EventPublisher } from "../event";
-import { Direction } from "../model/direction";
+import {Direction} from "../model/direction";
+import {FPS} from "../math/frames";
 
 interface InputState {
     frames: number;
@@ -15,6 +16,7 @@ export class KeyboardSource implements InputSource {
         rotation: new EventPublisher(),
     };
 
+
     private readonly keyState = new Map<any, InputState>();
 
     constructor(container: HTMLElement) {
@@ -26,14 +28,14 @@ export class KeyboardSource implements InputSource {
         for (const [ key, value ] of this.keyState.entries()) {
             if (!value.active) continue;
 
-            value.frames += elapsed * 60 / 1000;
+            value.frames += elapsed * FPS / 1000;
             const frames = Math.floor(value.frames);
 
             // emit once every 2 frames
             if (value.lastEmission > 0 && frames & 1) continue;
 
             // repeat only after 8 frames
-            if (value.lastEmission >= 0 && frames < 8) continue;
+            if (value.lastEmission >= 0 && frames < 15) continue;
 
             value.lastEmission = frames;
 
@@ -62,10 +64,13 @@ export class KeyboardSource implements InputSource {
 
     private handleKeyEvent(pressed: boolean) {
         return (event: KeyboardEvent) => {
+            if (event.repeat) return;
+
             const key = this.keyFromEvent(event);
             const movement = this.movementFromKey(key);
             const rotation = this.rotationFromKey(key);
             if (movement || rotation) {
+                console.log(key)
                 if (pressed) {
                     this.keyState.set(key, {
                         type: movement ? "movement" : "rotation",

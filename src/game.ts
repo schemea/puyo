@@ -33,23 +33,14 @@ export class PuyoGame {
                 character: "",
                 garbage: 0,
             });
-            this.boards.push(new BoardGraphic(this.messages.pipe(forBoard(i)), this.players[i].grid));
-            this.droppings.push(new DropGraphic(this.boards[i]));
+            this.boards.push(new BoardGraphic(this.messages.pipe(forBoard(i)), i, this.players[i].grid));
+            this.droppings.push(new DropGraphic(messages, i, this.boards[i]));
             this.inputSources.push([]);
         }
 
         for (let i = 1; i < players; i++) {
             this.boards[i].translate(new Point(this.boards[i - 1].max.x + 10, 0));
         }
-
-        const freeFallOptions: FreeFallOptions = {
-            speed: 1,
-            acceleration: 0.1875,
-            maxSpeed: 8,
-        };
-
-        this.boards[0].update(0);
-        this.boards[0].elements.forEach(value => value.forces.push(new FreeFallForce(freeFallOptions)));
 
         let timestamp = 0;
         requestAnimationFrame(newTimestamp => {
@@ -129,18 +120,5 @@ export class PuyoGame {
         });
     }
 
-    private handlePuyoMessage(message: PuyoMessage) {
-        const { grid } = this.boards[message.player];
-        switch (message.action) {
-            case "move": {
-                const { from, to } = message;
-                const { color } = grid.get(from.x, from.y);
-                grid.remove(from.x, from.y);
-                grid.set(to.x, to.y, color);
-
-                break;
-            }
-        }
-    }
 
 }
